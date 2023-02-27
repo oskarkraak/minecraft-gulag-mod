@@ -6,7 +6,6 @@
   "description": "",
   "authors": [],
   "contact": {},
-  "license": "MIT",
   "icon": "assets/gulag/icon.png",
   "environment": "server",
   "entrypoints": {
