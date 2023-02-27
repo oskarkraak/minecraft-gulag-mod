@@ -10,7 +10,7 @@
   "icon": "assets/gulag/icon.png",
   "environment": "server",
   "entrypoints": {
-    "main": [
+    "server": [
       "com.oskarkraak.gulag.Gulag"
     ]
   },
