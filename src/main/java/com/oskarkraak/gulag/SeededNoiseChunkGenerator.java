@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
@@ -39,13 +40,18 @@ import java.util.concurrent.Executor;
  */
 public class SeededNoiseChunkGenerator extends ChunkGenerator {
 
-    long seed;
-    NoiseChunkGenerator chunkGenerator;
+    private long seed;
+    private NoiseChunkGenerator chunkGenerator;
+    private NoiseConfig noiseConfig;
 
     public SeededNoiseChunkGenerator(long seed, BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource);
         this.seed = seed;
         chunkGenerator = new NoiseChunkGenerator(biomeSource, settings);
+        noiseConfig = NoiseConfig.create(
+                settings.value(),
+                Gulag.server.getOverworld().getRegistryManager().getWrapperOrThrow(RegistryKeys.NOISE_PARAMETERS),
+                seed);
     }
 
     @Override
@@ -70,17 +76,20 @@ public class SeededNoiseChunkGenerator extends ChunkGenerator {
     @Override
     public StructurePlacementCalculator createStructurePlacementCalculator(RegistryWrapper<StructureSet> structureSetRegistry, NoiseConfig noiseConfig, long seed) {
         seed = this.seed;
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.createStructurePlacementCalculator(structureSetRegistry, noiseConfig, seed);
     }
 
     @Override
     public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
         seed = this.seed;
+        noiseConfig = this.noiseConfig;
         chunkGenerator.carve(chunkRegion, seed, noiseConfig, biomeAccess, structureAccessor, chunk, carverStep);
     }
 
     @Override
     public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
+        noiseConfig = this.noiseConfig;
         chunkGenerator.buildSurface(region, structures, noiseConfig, chunk);
     }
 
@@ -96,6 +105,7 @@ public class SeededNoiseChunkGenerator extends ChunkGenerator {
 
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.populateNoise(executor, blender, noiseConfig, structureAccessor, chunk);
     }
 
@@ -111,21 +121,25 @@ public class SeededNoiseChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.getHeight(x, z, heightmap, world, noiseConfig);
     }
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.getColumnSample(x, z, world, noiseConfig);
     }
 
     @Override
     public void getDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {
+        noiseConfig = this.noiseConfig;
         chunkGenerator.getDebugHudText(text, noiseConfig, pos);
     }
 
     @Override
     public CompletableFuture<Chunk> populateBiomes(Executor executor, NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.populateBiomes(executor, noiseConfig, blender, structureAccessor, chunk);
     }
 
@@ -146,15 +160,17 @@ public class SeededNoiseChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getHeightOnGround(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.getHeightOnGround(x, z, heightmap, world, noiseConfig);
     }
 
     @Override
     public int getHeightInGround(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
+        noiseConfig = this.noiseConfig;
         return chunkGenerator.getHeightInGround(x, z, heightmap, world, noiseConfig);
     }
 
-    @Deprecated
+    @Override
     public GenerationSettings getGenerationSettings(RegistryEntry<Biome> biomeEntry) {
         return chunkGenerator.getGenerationSettings(biomeEntry);
     }
