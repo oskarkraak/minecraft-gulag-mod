@@ -39,12 +39,13 @@ public class Gulag implements DedicatedServerModInitializer {
         RegistryKey<ChunkGeneratorSettings> cgsKey = ChunkGeneratorSettings.OVERWORLD;
         RegistryEntry<ChunkGeneratorSettings> cgsEntry =
                 server.getRegistryManager().get(RegistryKeys.CHUNK_GENERATOR_SETTINGS).getEntry(cgsKey).orElseThrow();
-        ChunkGenerator cg = new NoiseChunkGenerator(bs, cgsEntry);
+        long seed = 100L;
+        ChunkGenerator cg = new SeededNoiseChunkGenerator(seed, bs, cgsEntry);
         RuntimeWorldConfig worldConfig = new RuntimeWorldConfig()
                 .setDimensionType(overworldDimensionTypeKey)
                 .setDifficulty(Difficulty.HARD)
                 .setGenerator(cg)
-                .setSeed(100L);
+                .setSeed(seed);
         RuntimeWorldHandle h = Fantasy.get(Gulag.server).openTemporaryWorld(worldConfig);
 //        Identifier id = new Identifier("gulag", "overworld");
 //        RuntimeWorldHandle worldHandle = Fantasy.get(server).getOrOpenPersistentWorld(id, worldConfig);
