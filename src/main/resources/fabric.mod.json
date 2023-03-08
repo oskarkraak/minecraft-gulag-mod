@@ -7,9 +7,9 @@
   "authors": [],
   "contact": {},
   "icon": "assets/gulag/icon.png",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
-    "server": [
+    "main": [
       "com.oskarkraak.gulag.Gulag"
     ]
   },
