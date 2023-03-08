@@ -4,8 +4,6 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,8 +20,7 @@ public class Gulag implements DedicatedServerModInitializer {
 
     private void loadGulag(MinecraftServer server) {
         this.server = server;
-        new VanillaWorld(server, "gulag", "overworld", 100L, World.OVERWORLD, ChunkGeneratorSettings.OVERWORLD,
-                Difficulty.HARD, true);
+        new Overworld(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:overworld");
     }
 
