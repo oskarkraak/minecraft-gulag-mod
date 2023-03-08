@@ -22,6 +22,8 @@ public class Gulag implements ModInitializer {
         Gulag.server = server;
         new Overworld(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:overworld");
+        new Nether(server, "gulag", 100L, Difficulty.HARD);
+        LOGGER.info("Loaded dimension gulag:the_nether");
         new End(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:the_end");
     }
