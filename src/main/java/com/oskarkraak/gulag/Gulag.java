@@ -22,6 +22,8 @@ public class Gulag implements DedicatedServerModInitializer {
         this.server = server;
         new Overworld(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:overworld");
+        new End(server, "gulag", 100L, Difficulty.HARD);
+        LOGGER.info("Loaded dimension gulag:the_end");
     }
 
 }
