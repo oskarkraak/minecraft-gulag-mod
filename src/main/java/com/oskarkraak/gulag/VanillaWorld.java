@@ -60,4 +60,8 @@ public class VanillaWorld {
         return worldHandle.getRegistryKey();
     }
 
+    public ServerWorld asWorld() {
+        return worldHandle.asWorld();
+    }
+
 }
