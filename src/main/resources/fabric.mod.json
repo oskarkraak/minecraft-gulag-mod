@@ -20,5 +20,6 @@
     "fabricloader": ">=0.14.17",
     "fabric": "*",
     "minecraft": "1.19.3"
-  }
+  },
+  "accessWidener" : "gulag.accesswidener"
 }

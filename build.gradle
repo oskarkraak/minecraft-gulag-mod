@@ -28,6 +28,10 @@ dependencies {
     modImplementation "xyz.nucleoid:fantasy:0.4.8+1.19.3"
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/gulag.accesswidener")
+}
+
 processResources {
     inputs.property "version", project.version
     filteringCharset "UTF-8"
