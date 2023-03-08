@@ -12,6 +12,9 @@ public class Gulag implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("Gulag");
 
     public static MinecraftServer server;
+    public static Overworld overworld;
+    public static Nether nether;
+    public static End end;
 
     @Override
     public void onInitialize() {
@@ -20,11 +23,11 @@ public class Gulag implements ModInitializer {
 
     private void loadGulag(MinecraftServer server) {
         Gulag.server = server;
-        new Overworld(server, "gulag", 100L, Difficulty.HARD);
+        overworld = new Overworld(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:overworld");
-        new Nether(server, "gulag", 100L, Difficulty.HARD);
+        nether = new Nether(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:the_nether");
-        new End(server, "gulag", 100L, Difficulty.HARD);
+        end = new End(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:the_end");
     }
 
