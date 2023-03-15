@@ -3,6 +3,7 @@ package com.oskarkraak.gulag;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Difficulty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +30,18 @@ public class Gulag implements ModInitializer {
         LOGGER.info("Loaded dimension gulag:the_nether");
         end = new End(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:the_end");
+    }
+
+    public static boolean isOverworld(ServerWorld world) {
+        return world.getRegistryKey() == Gulag.overworld.getRegistryKey();
+    }
+
+    public static boolean isNether(ServerWorld world) {
+        return world.getRegistryKey() == Gulag.nether.getRegistryKey();
+    }
+
+    public static boolean isEnd(ServerWorld world) {
+        return world.getRegistryKey() == Gulag.end.getRegistryKey();
     }
 
 }
