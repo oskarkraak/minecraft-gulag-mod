@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -17,7 +18,7 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(method = "moveToWorld", at = @At("HEAD"), cancellable = true)
     private void beforeMoveToWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
         ServerPlayerEntity player = ((ServerPlayerEntity) (Object) this);
-        ServerWorld origin = ((ServerPlayerEntity) (Object) this).getWorld();
+        ServerWorld origin = player.getWorld();
         boolean originIsGulagOverworld = Gulag.isOverworld(origin);
         boolean originIsGulagNether = Gulag.isNether(origin);
         boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
@@ -36,11 +37,14 @@ public abstract class ServerPlayerEntityMixin {
                 // Inspired from ServerPlayerEntity.getTeleportTarget (super.getTeleportTarget)
                 BlockPos spawn = ServerWorld.END_SPAWN_POS;
                 // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
-                player.createEndSpawnPlatform(world, new BlockPos(spawn.toCenterPos()));
+                invokeCreateEndSpawnPlatform(world, new BlockPos(spawn.toCenterPos()));
                 player.teleport(world, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, player.getYaw(), player.getPitch());
                 cir.setReturnValue(player);
             }
         }
     }
+
+    @Invoker("createEndSpawnPlatform")
+    abstract void invokeCreateEndSpawnPlatform(ServerWorld world, BlockPos centerPos);
 
 }
