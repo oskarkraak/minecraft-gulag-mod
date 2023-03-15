@@ -44,4 +44,12 @@ public class Gulag implements ModInitializer {
         return world.getRegistryKey() == Gulag.end.getRegistryKey();
     }
 
+    public static boolean isGulagOverworldOrNether(World world) {
+        return isGulagOverworld(world) || isGulagNether(world);
+    }
+
+    public static boolean isGulagWorld(World world) {
+        return isGulagOverworld(world) || isGulagNether(world) || isGulagEnd(world);
+    }
+
 }

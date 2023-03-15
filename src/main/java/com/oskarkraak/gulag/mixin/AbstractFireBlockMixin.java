@@ -13,10 +13,8 @@ public abstract class AbstractFireBlockMixin  {
 
     @Inject(method = "isOverworldOrNether", at = @At("RETURN"), cancellable = true)
     private static void isOverworldOrNether(World world, CallbackInfoReturnable<Boolean> cir) {
-        boolean gulagOverworld = world.getRegistryKey() == Gulag.overworld.getRegistryKey();
-        boolean gulagNether = world.getRegistryKey() == Gulag.nether.getRegistryKey();
         boolean minecraftOverworldOrNether = cir.getReturnValue();
-        cir.setReturnValue(minecraftOverworldOrNether || gulagOverworld || gulagNether);
+        cir.setReturnValue(minecraftOverworldOrNether || Gulag.isGulagOverworldOrNether(world));
     }
 
 }
