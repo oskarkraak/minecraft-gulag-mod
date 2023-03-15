@@ -1,2 +1,6 @@
 accessWidener	v1	named
 extendable	class	net/minecraft/world/gen/chunk/NoiseChunkGenerator
+accessible field net/minecraft/entity/Entity lastNetherPortalPosition Lnet/minecraft/util/math/BlockPos;
+accessible method net/minecraft/entity/Entity getPortalRect (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;ZLnet/minecraft/world/border/WorldBorder;)Ljava/util/Optional;
+accessible method net/minecraft/entity/Entity positionInPortal (Lnet/minecraft/util/math/Direction$Axis;Lnet/minecraft/world/BlockLocating$Rectangle;)Lnet/minecraft/util/math/Vec3d;
+accessible method net/minecraft/server/network/ServerPlayerEntity createEndSpawnPlatform (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;)V
