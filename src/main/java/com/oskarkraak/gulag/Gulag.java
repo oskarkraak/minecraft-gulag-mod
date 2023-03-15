@@ -32,15 +32,15 @@ public class Gulag implements ModInitializer {
         LOGGER.info("Loaded dimension gulag:the_end");
     }
 
-    public static boolean isOverworld(World world) {
+    public static boolean isGulagOverworld(World world) {
         return world.getRegistryKey() == Gulag.overworld.getRegistryKey();
     }
 
-    public static boolean isNether(World world) {
+    public static boolean isGulagNether(World world) {
         return world.getRegistryKey() == Gulag.nether.getRegistryKey();
     }
 
-    public static boolean isEnd(World world) {
+    public static boolean isGulagEnd(World world) {
         return world.getRegistryKey() == Gulag.end.getRegistryKey();
     }
 

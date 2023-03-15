@@ -27,8 +27,8 @@ public abstract class EntityMixin {
 
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     private void getTeleportTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        boolean destinationIsGulagOverworld = Gulag.isOverworld(destination);
-        boolean destinationIsGulagNether = Gulag.isNether(destination);
+        boolean destinationIsGulagOverworld = Gulag.isGulagOverworld(destination);
+        boolean destinationIsGulagNether = Gulag.isGulagNether(destination);
         if (destinationIsGulagOverworld || destinationIsGulagNether) {
             Entity entity = ((Entity) (Object) this);
             boolean bl3 = destination.getRegistryKey() == Gulag.nether.getRegistryKey();

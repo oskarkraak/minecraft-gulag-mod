@@ -19,8 +19,8 @@ public abstract class ServerPlayerEntityMixin {
     private void beforeMoveToWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
         ServerPlayerEntity player = ((ServerPlayerEntity) (Object) this);
         ServerWorld origin = player.getWorld();
-        boolean originIsGulagOverworld = Gulag.isOverworld(origin);
-        boolean originIsGulagNether = Gulag.isNether(origin);
+        boolean originIsGulagOverworld = Gulag.isGulagOverworld(origin);
+        boolean originIsGulagNether = Gulag.isGulagNether(origin);
         boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
         boolean destinationIsEnd = destination.getRegistryKey() == World.END;
         if (originIsGulagOverworld || originIsGulagNether) {
