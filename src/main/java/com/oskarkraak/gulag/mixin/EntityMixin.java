@@ -28,6 +28,37 @@ import java.util.Optional;
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 
+    @Inject(method = "moveToWorld", at = @At("HEAD"), cancellable = true)
+    private void beforeMoveToWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
+        Entity entity = ((Entity) (Object) this);
+        if (!(entity.world instanceof ServerWorld)) {
+            cir.setReturnValue(null);
+        }
+        ServerWorld origin = (ServerWorld) entity.world;
+        boolean originIsGulagOverworld = Gulag.isGulagOverworld(origin);
+        boolean originIsGulagNether = Gulag.isGulagNether(origin);
+        boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
+        boolean destinationIsEnd = destination.getRegistryKey() == World.END;
+        if (originIsGulagOverworld || originIsGulagNether) {
+            ServerWorld world = null;
+            if (originIsGulagNether && destinationIsNether) {
+                // This condition is due to a quirk where it will go to minecraft:the_nether when coming from
+                // gulag:the_nether
+                world = Gulag.overworld.asWorld();
+            } else if (destinationIsNether) {
+                world = Gulag.nether.asWorld();
+            } else if (destinationIsEnd) {
+                world = Gulag.end.asWorld();
+                // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
+                ServerWorld.createEndSpawnPlatform(destination);
+            }
+            if (world != null) {
+                Entity returnedPlayer = entity.moveToWorld(world);
+                cir.setReturnValue(returnedPlayer);
+            }
+        }
+    }
+
     @Shadow
     public World world;
 

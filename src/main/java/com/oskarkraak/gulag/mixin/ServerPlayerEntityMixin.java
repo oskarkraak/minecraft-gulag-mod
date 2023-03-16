@@ -37,9 +37,7 @@ public abstract class ServerPlayerEntityMixin {
                 invokeCreateEndSpawnPlatform(world,
                         new BlockPos(ServerWorld.END_SPAWN_POS.toCenterPos()));
             }
-            if (world == null) {
-                return;
-            } else {
+            if (world != null) {
                 Entity returnedPlayer = player.moveToWorld(world);
                 cir.setReturnValue(returnedPlayer);
             }
