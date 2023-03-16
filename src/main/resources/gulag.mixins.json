@@ -4,6 +4,9 @@
   "package": "com.oskarkraak.gulag.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AbstractFireBlockMixin",
+    "EntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "client": [
   ],

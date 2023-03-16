@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +13,9 @@ public class Gulag implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("Gulag");
 
     public static MinecraftServer server;
+    public static Overworld overworld;
+    public static Nether nether;
+    public static End end;
 
     @Override
     public void onInitialize() {
@@ -20,12 +24,32 @@ public class Gulag implements ModInitializer {
 
     private void loadGulag(MinecraftServer server) {
         Gulag.server = server;
-        new Overworld(server, "gulag", 100L, Difficulty.HARD);
+        overworld = new Overworld(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:overworld");
-        new Nether(server, "gulag", 100L, Difficulty.HARD);
+        nether = new Nether(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:the_nether");
-        new End(server, "gulag", 100L, Difficulty.HARD);
+        end = new End(server, "gulag", 100L, Difficulty.HARD);
         LOGGER.info("Loaded dimension gulag:the_end");
+    }
+
+    public static boolean isGulagOverworld(World world) {
+        return world.getRegistryKey() == Gulag.overworld.getRegistryKey();
+    }
+
+    public static boolean isGulagNether(World world) {
+        return world.getRegistryKey() == Gulag.nether.getRegistryKey();
+    }
+
+    public static boolean isGulagEnd(World world) {
+        return world.getRegistryKey() == Gulag.end.getRegistryKey();
+    }
+
+    public static boolean isGulagOverworldOrNether(World world) {
+        return isGulagOverworld(world) || isGulagNether(world);
+    }
+
+    public static boolean isGulagWorld(World world) {
+        return isGulagOverworld(world) || isGulagNether(world) || isGulagEnd(world);
     }
 
 }
