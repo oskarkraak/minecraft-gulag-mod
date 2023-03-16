@@ -9,11 +9,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockLocating;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.TeleportTarget;
+import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.dimension.NetherPortal;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,12 +28,25 @@ import java.util.Optional;
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 
+    @Shadow
+    public World world;
+
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     private void getTeleportTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        boolean destinationIsGulagOverworld = Gulag.isGulagOverworld(destination);
-        boolean destinationIsGulagNether = Gulag.isGulagNether(destination);
-        if (destinationIsGulagOverworld || destinationIsGulagNether) {
-            Entity entity = ((Entity) (Object) this);
+        Entity entity = ((Entity) (Object) this);
+        boolean returnFromGulag = entity.world.getRegistryKey() == Gulag.end.getRegistryKey()
+                && destination.getRegistryKey() == World.OVERWORLD;
+        if (Gulag.isGulagWorld(destination) || returnFromGulag) {
+            boolean bl2 = destination.getRegistryKey() == Gulag.end.getRegistryKey();
+            if (returnFromGulag || bl2) {
+                BlockPos blockPos = bl2 ? ServerWorld.END_SPAWN_POS :
+                        destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
+                TeleportTarget toReturn = new TeleportTarget(new Vec3d((double) blockPos.getX() + 0.5,
+                        blockPos.getY(), (double) blockPos.getZ() + 0.5),
+                        entity.getVelocity(), entity.getYaw(), entity.getPitch());
+                cir.setReturnValue(toReturn);
+                return;
+            }
             boolean bl3 = destination.getRegistryKey() == Gulag.nether.getRegistryKey();
             WorldBorder worldBorder = destination.getWorldBorder();
             double d = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
@@ -49,8 +65,8 @@ public abstract class EntityMixin {
                     axis = Direction.Axis.X;
                     vec3d = new Vec3d(0.5, 0.0, 0.0);
                 }
-                return NetherPortal.getNetherTeleportTarget(destination, rect, axis, vec3d, entity, entity.getVelocity(),
-                        entity.getYaw(), entity.getPitch());
+                return NetherPortal.getNetherTeleportTarget(destination, rect, axis, vec3d, entity,
+                        entity.getVelocity(), entity.getYaw(), entity.getPitch());
             }).orElse(null);
             cir.setReturnValue(toReturn);
         }

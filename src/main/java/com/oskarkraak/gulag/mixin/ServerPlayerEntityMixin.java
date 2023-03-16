@@ -24,22 +24,24 @@ public abstract class ServerPlayerEntityMixin {
         boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
         boolean destinationIsEnd = destination.getRegistryKey() == World.END;
         if (originIsGulagOverworld || originIsGulagNether) {
+            ServerWorld world = null;
             if (originIsGulagNether && destinationIsNether) {
                 // This condition is due to a quirk where it will go to minecraft:the_nether when coming from
                 // gulag:the_nether
-                Entity returnedPlayer = player.moveToWorld(Gulag.overworld.asWorld());
-                cir.setReturnValue(returnedPlayer);
+                world = Gulag.overworld.asWorld();
             } else if (destinationIsNether) {
-                Entity returnedPlayer = player.moveToWorld(Gulag.nether.asWorld());
-                cir.setReturnValue(returnedPlayer);
+                world = Gulag.nether.asWorld();
             } else if (destinationIsEnd) {
-                ServerWorld world = Gulag.end.asWorld();
-                // Inspired from ServerPlayerEntity.getTeleportTarget (super.getTeleportTarget)
-                BlockPos spawn = ServerWorld.END_SPAWN_POS;
+                world = Gulag.end.asWorld();
                 // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
-                invokeCreateEndSpawnPlatform(world, new BlockPos(spawn.toCenterPos()));
-                player.teleport(world, spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, player.getYaw(), player.getPitch());
-                cir.setReturnValue(player);
+                invokeCreateEndSpawnPlatform(world,
+                        new BlockPos(ServerWorld.END_SPAWN_POS.toCenterPos()));
+            }
+            if (world == null) {
+                return;
+            } else {
+                Entity returnedPlayer = player.moveToWorld(world);
+                cir.setReturnValue(returnedPlayer);
             }
         }
     }
