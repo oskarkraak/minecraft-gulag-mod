@@ -5,8 +5,13 @@ import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.SpawnLocating;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.TeleportTarget;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,9 +29,14 @@ public class Gulag implements ModInitializer {
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(this::loadGulag);
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-            BlockPos spawnPos = overworld.asWorld().getSpawnPos();
-            TeleportTarget target = new TeleportTarget(spawnPos.toCenterPos(), newPlayer.getVelocity(), newPlayer.getYaw(), newPlayer.getPitch());
-            FabricDimensions.teleport(newPlayer, overworld.asWorld(), target);
+            ServerWorld overworldWorld = overworld.asWorld();
+
+
+            ChunkPos chunkPos = new ChunkPos(overworldWorld.getChunkManager().getNoiseConfig().getMultiNoiseSampler().findBestSpawnPosition());
+            BlockPos pos3 = SpawnLocating.findServerSpawnPoint(overworldWorld, new ChunkPos(chunkPos.x, chunkPos.z ));
+
+            TeleportTarget target = new TeleportTarget(pos3.toCenterPos(), Vec3d.ZERO, 0.0f, 0.0f);
+            FabricDimensions.teleport(newPlayer, overworldWorld, target);
         });
     }
 
