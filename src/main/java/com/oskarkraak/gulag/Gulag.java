@@ -60,14 +60,14 @@ public class Gulag implements ModInitializer {
         FabricDimensions.teleport(newPlayer, overworld.asWorld(), target);
     }
 
-    private void sendInfoMessage(ServerPlayerEntity player) {
+    public static void sendInfoMessage(ServerPlayerEntity player) {
         executeCommand(RESPAWN_MESSAGE_TIME);
         executeCommand(RESPAWN_MESSAGE_TITLE);
         executeCommand(RESPAWN_MESSAGE_SUBTITLE);
         player.sendMessage(Text.of(RESPAWN_MESSAGE_CHAT));
     }
 
-    private void executeCommand(String command) {
+    private static void executeCommand(String command) {
         server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
     }
 
