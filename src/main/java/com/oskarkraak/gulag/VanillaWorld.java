@@ -56,12 +56,12 @@ public class VanillaWorld {
         worldHandle.delete();
     }
 
-    public RegistryKey<World> getRegistryKey() {
-        return worldHandle.getRegistryKey();
+    public ServerWorld asWorld(){
+        return worldHandle.asWorld();
     }
 
-    public ServerWorld asWorld() {
-        return worldHandle.asWorld();
+    public RegistryKey<World> getRegistryKey(){
+        return worldHandle.getRegistryKey();
     }
 
 }
