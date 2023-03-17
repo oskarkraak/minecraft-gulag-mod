@@ -23,6 +23,8 @@ public class Gulag implements ModInitializer {
     private static final String RESPAWN_MESSAGE_TIME = "title @a times 20 200 20";
     private static final String RESPAWN_MESSAGE_TITLE = "title @a title {\"text\":\"Gulag\",\"color\":\"dark_red\"}";
     private static final String RESPAWN_MESSAGE_SUBTITLE = "title @a subtitle {\"text\":\"Defeat the ender dragon!\"}";
+    private static final String RESPAWN_MESSAGE_CHAT =
+            "Welcome to the Gulag! Fight your way back to your home world by defeating the ender dragon.";
 
     public static MinecraftServer server;
     public static Overworld overworld;
@@ -59,9 +61,14 @@ public class Gulag implements ModInitializer {
     }
 
     private void sendInfoMessage(ServerPlayerEntity player) {
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(), RESPAWN_MESSAGE_TIME);
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(), RESPAWN_MESSAGE_TITLE);
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(), RESPAWN_MESSAGE_SUBTITLE);
+        executeCommand(RESPAWN_MESSAGE_TIME);
+        executeCommand(RESPAWN_MESSAGE_TITLE);
+        executeCommand(RESPAWN_MESSAGE_SUBTITLE);
+        player.sendMessage(Text.of(RESPAWN_MESSAGE_CHAT));
+    }
+
+    private void executeCommand(String command) {
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
     }
 
     public static boolean isGulagOverworld(World world) {
