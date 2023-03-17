@@ -20,6 +20,9 @@ import org.apache.logging.log4j.Logger;
 public class Gulag implements ModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger("Gulag");
+    private static final String RESPAWN_MESSAGE_TIME = "title @a times 20 200 20";
+    private static final String RESPAWN_MESSAGE_TITLE = "title @a title {\"text\":\"Gulag\",\"color\":\"dark_red\"}";
+    private static final String RESPAWN_MESSAGE_SUBTITLE = "title @a subtitle {\"text\":\"Defeat the ender dragon!\"}";
 
     public static MinecraftServer server;
     public static Overworld overworld;
@@ -56,7 +59,9 @@ public class Gulag implements ModInitializer {
     }
 
     private void sendInfoMessage(ServerPlayerEntity player) {
-        player.sendMessage(Text.of("Welcome to the Gulag! Defeat the ender dragon to return to your home world."));
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(), RESPAWN_MESSAGE_TIME);
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(), RESPAWN_MESSAGE_TITLE);
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(), RESPAWN_MESSAGE_SUBTITLE);
     }
 
     public static boolean isGulagOverworld(World world) {
