@@ -38,6 +38,10 @@ public class SeededNoiseChunkGenerator extends NoiseChunkGenerator {
         setSeed(seed);
     }
 
+    public long getSeed() {
+        return seed;
+    }
+
     public void setSeed(long seed) {
         this.seed = seed;
         noiseConfig = NoiseConfig.create(

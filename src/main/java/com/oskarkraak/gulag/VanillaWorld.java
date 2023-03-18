@@ -10,7 +10,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import xyz.nucleoid.fantasy.Fantasy;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
@@ -19,6 +18,7 @@ import xyz.nucleoid.fantasy.RuntimeWorldHandle;
 public class VanillaWorld {
 
     private final RuntimeWorldHandle worldHandle;
+    private final SeededNoiseChunkGenerator chunkGenerator;
 
     public VanillaWorld(MinecraftServer server, String namespace, String dimensionType, long seed, RegistryKey<World> worldKey,
                         RegistryKey<ChunkGeneratorSettings> cgsKey, Difficulty difficulty) {
@@ -27,10 +27,11 @@ public class VanillaWorld {
 
     public VanillaWorld(MinecraftServer server, String namespace, String dimensionType, long seed, RegistryKey<World> worldKey,
                         RegistryKey<ChunkGeneratorSettings> cgsKey, Difficulty difficulty, boolean shouldTickTime) {
+        chunkGenerator = getChunkGenerator(server, seed, worldKey, cgsKey);
         RuntimeWorldConfig worldConfig = new RuntimeWorldConfig()
                 .setDimensionType(getDimensionTypeKey(dimensionType))
                 .setDifficulty(difficulty)
-                .setGenerator(getChunkGenerator(server, seed, worldKey, cgsKey))
+                .setGenerator(chunkGenerator)
                 .setSeed(seed)
                 .setShouldTickTime(shouldTickTime);
         Identifier id = new Identifier(namespace, dimensionType);
@@ -41,8 +42,8 @@ public class VanillaWorld {
         return RegistryKey.of(RegistryKeys.DIMENSION_TYPE, new Identifier("minecraft", dimensionType));
     }
 
-    private ChunkGenerator getChunkGenerator(MinecraftServer server, long seed, RegistryKey<World> worldKey,
-                                             RegistryKey<ChunkGeneratorSettings> cgsKey) {
+    private SeededNoiseChunkGenerator getChunkGenerator(MinecraftServer server, long seed, RegistryKey<World> worldKey,
+                                                        RegistryKey<ChunkGeneratorSettings> cgsKey) {
         RegistryEntry<World> worldEntry =
                 server.getRegistryManager().get(RegistryKeys.WORLD).getEntry(worldKey).orElseThrow();
         ServerWorld world = server.getWorld(worldEntry.getKey().orElseThrow());
@@ -56,12 +57,16 @@ public class VanillaWorld {
         worldHandle.delete();
     }
 
-    public ServerWorld asWorld(){
+    public ServerWorld asWorld() {
         return worldHandle.asWorld();
     }
 
-    public RegistryKey<World> getRegistryKey(){
+    public RegistryKey<World> getRegistryKey() {
         return worldHandle.getRegistryKey();
+    }
+
+    public long getSeed() {
+        return chunkGenerator.getSeed();
     }
 
 }
