@@ -31,33 +31,13 @@ public abstract class EntityMixin {
     @Inject(method = "moveToWorld", at = @At("HEAD"), cancellable = true)
     private void beforeMoveToWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
         Entity entity = ((Entity) (Object) this);
-        if (!(entity.world instanceof ServerWorld)) {
+        if (!(entity.world instanceof ServerWorld origin)) {
             cir.setReturnValue(null);
+            return;
         }
-        ServerWorld origin = (ServerWorld) entity.world;
-        boolean originIsGulagOverworld = Gulag.isGulagOverworld(origin);
-        boolean originIsGulagNether = Gulag.isGulagNether(origin);
-        boolean originIsGulagEnd = Gulag.isGulagEnd(origin);
-        boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
-        boolean destinationIsEnd = destination.getRegistryKey() == World.END;
-        ServerWorld world = null;
-        if (originIsGulagOverworld && destinationIsNether) {
-            // gulag:overworld -> gulag:the_nether
-            world = Gulag.nether.asWorld();
-        } else if (originIsGulagNether && destinationIsNether) {
-            // gulag:the_nether -> gulag:overworld
-            world = Gulag.overworld.asWorld();
-        } else if (originIsGulagOverworld && destinationIsEnd) {
-            // gulag:overworld -> gulag:the_end
-            world = Gulag.end.asWorld();
-            // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
-            ServerWorld.createEndSpawnPlatform(world);
-        } else if (originIsGulagEnd && destinationIsEnd) {
-            // gulag:the_end -> minecraft:overworld
-            world = Gulag.server.getOverworld();
-        }
-        if (world != null) {
-            Entity returnedPlayer = entity.moveToWorld(world);
+        ServerWorld correctDestination = Gulag.getCorrectDestination(entity, origin, destination);
+        if (destination != correctDestination) {
+            Entity returnedPlayer = entity.moveToWorld(correctDestination);
             cir.setReturnValue(returnedPlayer);
         }
     }

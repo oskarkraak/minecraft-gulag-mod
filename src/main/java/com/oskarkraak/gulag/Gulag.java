@@ -1,12 +1,15 @@
 package com.oskarkraak.gulag;
 
+import com.oskarkraak.gulag.mixin.ServerPlayerEntityInvoker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.SpawnLocating;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -71,6 +74,43 @@ public class Gulag implements ModInitializer {
         server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
     }
 
+    /**
+     * Finds the correct destination world for an entity coming from a gulag world.
+     *
+     * @param entity              is the entity that is moving between worlds
+     * @param originalDestination is the original destination of the entity
+     * @return the correct destination
+     */
+    public static ServerWorld getCorrectDestination(Entity entity, ServerWorld origin, ServerWorld originalDestination) {
+        boolean originIsGulagOverworld = Gulag.isGulagOverworld(origin);
+        boolean originIsGulagNether = Gulag.isGulagNether(origin);
+        boolean originIsGulagEnd = Gulag.isGulagEnd(origin);
+        boolean destinationIsNether = originalDestination.getRegistryKey() == World.NETHER;
+        boolean destinationIsEnd = originalDestination.getRegistryKey() == World.END;
+        ServerWorld destination = originalDestination;
+        if (originIsGulagOverworld && destinationIsNether) {
+            // gulag:overworld -> gulag:the_nether
+            destination = Gulag.nether.asWorld();
+        } else if (originIsGulagNether && destinationIsNether) {
+            // gulag:the_nether -> gulag:overworld
+            destination = Gulag.overworld.asWorld();
+        } else if (originIsGulagOverworld && destinationIsEnd) {
+            // gulag:overworld -> gulag:the_end
+            destination = Gulag.end.asWorld();
+            // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
+            if (entity instanceof ServerPlayerEntity player) {
+                ((ServerPlayerEntityInvoker) player).invokeCreateEndSpawnPlatform(
+                        destination, new BlockPos(ServerWorld.END_SPAWN_POS.toCenterPos()));
+            } else {
+                ServerWorld.createEndSpawnPlatform(destination);
+            }
+        } else if (originIsGulagEnd && destinationIsEnd) {
+            // gulag:the_end -> minecraft:overworld
+            destination = Gulag.server.getOverworld();
+        }
+        return destination;
+    }
+
     public static boolean isGulagOverworld(World world) {
         return world.getRegistryKey() == Gulag.overworld.getRegistryKey();
     }
@@ -90,6 +130,5 @@ public class Gulag implements ModInitializer {
     public static boolean isGulagWorld(World world) {
         return isGulagOverworld(world) || isGulagNether(world) || isGulagEnd(world);
     }
-
 
 }
