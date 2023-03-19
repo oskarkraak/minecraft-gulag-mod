@@ -27,7 +27,7 @@ public class End extends VanillaWorld {
     public void startEnderDragonFight() {
         NbtCompound nbtCompound = this.getGulagDragonFightNbtCompound();
         if (!nbtCompound.contains("PreviouslyKilled")) {
-            nbtCompound.putBoolean("NeedsStateScanning", false);
+            nbtCompound.putBoolean("NeedsStateScanning", true);
             nbtCompound.putBoolean("DragonKilled", false);
             nbtCompound.putBoolean("PreviouslyKilled", false);
         }
