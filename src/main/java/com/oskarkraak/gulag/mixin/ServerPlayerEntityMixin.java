@@ -21,26 +21,28 @@ public abstract class ServerPlayerEntityMixin {
         ServerWorld origin = player.getWorld();
         boolean originIsGulagOverworld = Gulag.isGulagOverworld(origin);
         boolean originIsGulagNether = Gulag.isGulagNether(origin);
+        boolean originIsGulagEnd = Gulag.isGulagEnd(origin);
         boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
         boolean destinationIsEnd = destination.getRegistryKey() == World.END;
-        if (originIsGulagOverworld || originIsGulagNether) {
-            ServerWorld world = null;
-            if (originIsGulagNether && destinationIsNether) {
-                // This condition is due to a quirk where it will go to minecraft:the_nether when coming from
-                // gulag:the_nether
-                world = Gulag.overworld.asWorld();
-            } else if (destinationIsNether) {
-                world = Gulag.nether.asWorld();
-            } else if (destinationIsEnd) {
-                world = Gulag.end.asWorld();
-                // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
-                invokeCreateEndSpawnPlatform(world,
-                        new BlockPos(ServerWorld.END_SPAWN_POS.toCenterPos()));
-            }
-            if (world != null) {
-                Entity returnedPlayer = player.moveToWorld(world);
-                cir.setReturnValue(returnedPlayer);
-            }
+        ServerWorld world = null;
+        if (originIsGulagOverworld && destinationIsNether) {
+            // gulag:overworld -> gulag:the_nether
+            world = Gulag.nether.asWorld();
+        } else if (originIsGulagNether && destinationIsNether) {
+            // gulag:the_nether -> gulag:overworld
+            world = Gulag.overworld.asWorld();
+        } else if (originIsGulagOverworld && destinationIsEnd) {
+            // gulag:overworld -> gulag:the_end
+            world = Gulag.end.asWorld();
+            // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
+            invokeCreateEndSpawnPlatform(world, new BlockPos(ServerWorld.END_SPAWN_POS.toCenterPos()));
+        } else if (originIsGulagEnd && destinationIsEnd) {
+            // gulag:the_end -> minecraft:overworld
+            world = Gulag.server.getOverworld();
+        }
+        if (world != null) {
+            Entity returnedPlayer = player.moveToWorld(world);
+            cir.setReturnValue(returnedPlayer);
         }
     }
 
