@@ -35,9 +35,17 @@ public class SeededNoiseChunkGenerator extends NoiseChunkGenerator {
 
     public SeededNoiseChunkGenerator(long seed, BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(biomeSource, settings);
+        setSeed(seed);
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    public void setSeed(long seed) {
         this.seed = seed;
         noiseConfig = NoiseConfig.create(
-                settings.value(),
+                super.getSettings().value(),
                 Gulag.server.getOverworld().getRegistryManager().getWrapperOrThrow(RegistryKeys.NOISE_PARAMETERS),
                 seed);
     }
