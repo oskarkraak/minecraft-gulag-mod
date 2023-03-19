@@ -54,7 +54,7 @@ public class End extends VanillaWorld {
     }
 
     private String getNbtCompoundKeyPrefix() {
-        return this.asWorld().getRegistryKey().getValue().toString();
+        return this.asWorld().getRegistryKey().getValue().toString() + "-";
     }
 
     /**
