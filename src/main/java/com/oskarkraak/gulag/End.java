@@ -59,17 +59,19 @@ public class End extends VanillaWorld {
 
     /**
      * Merges the dragon fight into the Minecraft dragon fight.
-     * Make sure to call after the Minecraft dragon fight has been saved.
+     * Only saves after another dragon fight has been saved.
      */
     public void onSave(ServerWorld world) {
-        if (this.getRegistryKey() != world.getRegistryKey()) {
-            return;
+        boolean isThis = this.getRegistryKey() == world.getRegistryKey();
+        boolean worldHasEnderDragonFight = world.getEnderDragonFight() != null;
+        if (!isThis && worldHasEnderDragonFight) {
+            saveEnderDragonFight();
         }
-        saveEnderDragonFight();
     }
 
     private void saveEnderDragonFight() {
         NbtCompound minecraftDragonFightNbtCompound = getMinecraftDragonFightNbtCompound();
+        NbtCompoundUtils.removeAllElementsWithPrefix(this.getNbtCompoundKeyPrefix(), minecraftDragonFightNbtCompound);
         NbtCompound gulagDragonFightNbtCompound = this.asWorld().getEnderDragonFight().toNbt();
         NbtCompoundUtils.addPrefix(this.getNbtCompoundKeyPrefix(), gulagDragonFightNbtCompound);
         NbtCompound dragonFightNbtCompound =
