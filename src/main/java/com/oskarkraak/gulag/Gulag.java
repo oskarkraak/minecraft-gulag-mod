@@ -51,8 +51,10 @@ public class Gulag implements ModInitializer {
     }
 
     private void onRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean alive) {
-        respawnInGulag(oldPlayer, newPlayer, alive);
-        sendInfoMessage(newPlayer);
+        if (!alive) {
+            respawnInGulag(newPlayer);
+            sendInfoMessage(newPlayer);
+        }
     }
 
     private void respawnInGulag(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean alive) {
