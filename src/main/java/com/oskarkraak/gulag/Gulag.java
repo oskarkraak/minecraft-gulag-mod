@@ -100,7 +100,7 @@ public class Gulag implements ModInitializer {
             // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
             if (entity instanceof ServerPlayerEntity player) {
                 ((ServerPlayerEntityInvoker) player).invokeCreateEndSpawnPlatform(
-                        destination, new BlockPos(ServerWorld.END_SPAWN_POS.toCenterPos()));
+                        destination, new BlockPos(ServerWorld.END_SPAWN_POS));
             } else {
                 ServerWorld.createEndSpawnPlatform(destination);
             }
