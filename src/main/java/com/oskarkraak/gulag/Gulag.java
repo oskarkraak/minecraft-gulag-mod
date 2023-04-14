@@ -57,12 +57,12 @@ public class Gulag implements ModInitializer {
         }
     }
 
-    private void respawnInGulag(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean alive) {
+    private void respawnInGulag(ServerPlayerEntity player) {
         BlockPos bestSpawnPos = overworld.asWorld().getChunkManager().getNoiseConfig().getMultiNoiseSampler()
                 .findBestSpawnPosition();
         BlockPos spawnPos = SpawnLocating.findServerSpawnPoint(overworld.asWorld(), new ChunkPos(bestSpawnPos));
         TeleportTarget target = new TeleportTarget(spawnPos.toCenterPos(), Vec3d.ZERO, 0.0f, 0.0f);
-        FabricDimensions.teleport(newPlayer, overworld.asWorld(), target);
+        FabricDimensions.teleport(player, overworld.asWorld(), target);
     }
 
     private void sendInfoMessage(ServerPlayerEntity player) {
