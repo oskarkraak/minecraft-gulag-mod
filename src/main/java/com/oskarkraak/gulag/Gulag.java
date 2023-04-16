@@ -112,7 +112,7 @@ public class Gulag implements ModInitializer {
                 loadGulag(getRandomSeed());
             }
             respawnInGulag(newPlayer);
-            sendInfoMessage(newPlayer);
+//            sendInfoMessage(newPlayer);
         }
     }
 
