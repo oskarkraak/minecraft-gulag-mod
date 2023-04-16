@@ -1,4 +1,4 @@
-package com.oskarkraak.gulag;
+package com.oskarkraak.gulag.world;
 
 import com.oskarkraak.gulag.event.ServerWorldEvents;
 import com.oskarkraak.gulag.mixin.ServerWorldAccessor;

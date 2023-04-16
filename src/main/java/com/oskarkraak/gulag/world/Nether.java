@@ -1,4 +1,4 @@
-package com.oskarkraak.gulag;
+package com.oskarkraak.gulag.world;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Difficulty;

@@ -1,4 +1,4 @@
-package com.oskarkraak.gulag;
+package com.oskarkraak.gulag.world;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;

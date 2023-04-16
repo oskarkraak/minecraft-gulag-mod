@@ -1,6 +1,9 @@
 package com.oskarkraak.gulag;
 
 import com.oskarkraak.gulag.mixin.ServerPlayerEntityInvoker;
+import com.oskarkraak.gulag.world.End;
+import com.oskarkraak.gulag.world.Nether;
+import com.oskarkraak.gulag.world.Overworld;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
