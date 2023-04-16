@@ -32,3 +32,20 @@ server spawn point) of their original world.
 The player will keep all items acquired in the gulag.
 As soon as everyone has left the gulag, it will be deleted.
 Now, if a player dies, a new gulag will be created with a new random seed.
+
+## Install
+
+This is a fabric mod.
+Since it only accesses server resources, it can be installed in the client for single-player or on a server for
+multiplayer. If installed on a server, the players **don't** need to install anything.
+
+1. Choose a Minecraft version you want to play.
+   Note that the gulag mod is not available for all versions of Minecraft.
+   You can find all gulag mod versions [here](https://github.com/oskarkraak/minecraft-gulag-mod/releases).
+   Ideally you choose a Minecraft version for which the latest version of the gulag mod is available.
+1. Download and start the [Fabric installer](https://fabricmc.net/use/installer/).
+1. Choose your Minecraft version and press "Install".
+1. Download the correct version of each of the following into the `mods` folder of your Minecraft installation:
+   1. [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+   1. [Fantasy library](https://github.com/NucleoidMC/fantasy/releases)
+   1. [Gulag mod](https://github.com/oskarkraak/minecraft-gulag-mod/releases)
