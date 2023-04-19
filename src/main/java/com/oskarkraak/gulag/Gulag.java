@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.Entity;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.SpawnLocating;
@@ -53,12 +54,13 @@ public class Gulag implements ModInitializer {
         return new Random().nextLong();
     }
 
-    private static void respawnInGulag(ServerPlayerEntity player) {
+    private static void putInGulag(ServerPlayerEntity player) {
         BlockPos bestSpawnPos = overworld.asWorld().getChunkManager().getNoiseConfig().getMultiNoiseSampler()
                 .findBestSpawnPosition();
         BlockPos spawnPos = SpawnLocating.findServerSpawnPoint(overworld.asWorld(), new ChunkPos(bestSpawnPos));
         TeleportTarget target = new TeleportTarget(spawnPos.toCenterPos(), Vec3d.ZERO, 0.0f, 0.0f);
         FabricDimensions.teleport(player, overworld.asWorld(), target);
+        player.setSpawnPoint(overworld.getRegistryKey(), spawnPos, 0.0f, true, false);
     }
 
     private static void sendInfoMessage(ServerPlayerEntity player) {
@@ -111,8 +113,12 @@ public class Gulag implements ModInitializer {
             if (!Gulag.isLoaded) {
                 loadGulag(getRandomSeed());
             }
-            respawnInGulag(newPlayer);
-//            sendInfoMessage(newPlayer);
+
+            if(!isGulagWorld(newPlayer.getSpawnPointDimension())) {
+                putInGulag(newPlayer);
+//              sendInfoMessage(newPlayer);
+
+            }
         }
     }
 
@@ -159,24 +165,49 @@ public class Gulag implements ModInitializer {
         return destination;
     }
 
+    public static boolean isGulagOverworld(RegistryKey<World> world) {
+        return world == Gulag.overworld.getRegistryKey();
+    }
+
+    public static boolean isGulagNether(RegistryKey<World> world) {
+        return world == Gulag.nether.getRegistryKey();
+    }
+
+    public static boolean isGulagEnd(RegistryKey<World> world) {
+        return world == Gulag.end.getRegistryKey();
+    }
+
+
     public static boolean isGulagOverworld(World world) {
-        return world.getRegistryKey() == Gulag.overworld.getRegistryKey();
+        return isGulagOverworld(world.getRegistryKey());
     }
 
     public static boolean isGulagNether(World world) {
-        return world.getRegistryKey() == Gulag.nether.getRegistryKey();
+        return isGulagNether(world.getRegistryKey());
     }
 
     public static boolean isGulagEnd(World world) {
-        return world.getRegistryKey() == Gulag.end.getRegistryKey();
+        return isGulagEnd(world.getRegistryKey());
     }
 
-    public static boolean isGulagOverworldOrNether(World world) {
+
+    public static boolean isGulagOverworldOrNether(RegistryKey<World> world) {
         return isGulagOverworld(world) || isGulagNether(world);
     }
 
+    public static boolean isGulagOverworldOrNether(World world) {
+        return isGulagOverworldOrNether(world.getRegistryKey());
+    }
+
+
+    public static boolean isGulagWorld(RegistryKey<World> world) {
+        return isGulagOverworld(world)
+                || isGulagNether(world)
+                || isGulagEnd(world);
+    }
+
     public static boolean isGulagWorld(World world) {
-        return isGulagOverworld(world) || isGulagNether(world) || isGulagEnd(world);
+        return isGulagWorld(world.getRegistryKey());
     }
 
 }
