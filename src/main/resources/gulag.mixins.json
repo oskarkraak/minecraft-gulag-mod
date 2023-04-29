@@ -6,8 +6,11 @@
   "mixins": [
     "AbstractFireBlockMixin",
     "EntityMixin",
-    "PlayerManagerMixin",
-    "ServerPlayerEntityMixin"
+    "PlayerEntityMixin",
+    "ServerPlayerEntityInvoker",
+    "ServerPlayerEntityMixin",
+    "ServerWorldAccessor",
+    "ServerWorldMixin"
   ],
   "client": [
   ],

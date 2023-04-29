@@ -31,31 +31,14 @@ public abstract class EntityMixin {
     @Inject(method = "moveToWorld", at = @At("HEAD"), cancellable = true)
     private void beforeMoveToWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
         Entity entity = ((Entity) (Object) this);
-        if (!(entity.world instanceof ServerWorld)) {
+        if (!(entity.world instanceof ServerWorld origin)) {
             cir.setReturnValue(null);
+            return;
         }
-        ServerWorld origin = (ServerWorld) entity.world;
-        boolean originIsGulagOverworld = Gulag.isGulagOverworld(origin);
-        boolean originIsGulagNether = Gulag.isGulagNether(origin);
-        boolean destinationIsNether = destination.getRegistryKey() == World.NETHER;
-        boolean destinationIsEnd = destination.getRegistryKey() == World.END;
-        if (originIsGulagOverworld || originIsGulagNether) {
-            ServerWorld world = null;
-            if (originIsGulagNether && destinationIsNether) {
-                // This condition is due to a quirk where it will go to minecraft:the_nether when coming from
-                // gulag:the_nether
-                world = Gulag.overworld.asWorld();
-            } else if (destinationIsNether) {
-                world = Gulag.nether.asWorld();
-            } else if (destinationIsEnd) {
-                world = Gulag.end.asWorld();
-                // Because Minecraft does this only for the World.END, we have to create the spawn platform ourselves
-                ServerWorld.createEndSpawnPlatform(destination);
-            }
-            if (world != null) {
-                Entity returnedPlayer = entity.moveToWorld(world);
-                cir.setReturnValue(returnedPlayer);
-            }
+        ServerWorld correctDestination = Gulag.getCorrectDestination(entity, origin, destination);
+        if (destination != correctDestination) {
+            Entity returnedPlayer = entity.moveToWorld(correctDestination);
+            cir.setReturnValue(returnedPlayer);
         }
     }
 
@@ -90,7 +73,7 @@ public abstract class EntityMixin {
                     axis = blockState.get(Properties.HORIZONTAL_AXIS);
                     BlockLocating.Rectangle rectangle = BlockLocating.getLargestRectangle(getLastNetherPortalPosition(),
                             axis, 21, Direction.Axis.Y, 21,
-                            pos -> entity.world.getBlockState((BlockPos) pos) == blockState);
+                            pos -> entity.world.getBlockState(pos) == blockState);
                     vec3d = invokePositionInPortal(axis, rectangle);
                 } else {
                     axis = Direction.Axis.X;
