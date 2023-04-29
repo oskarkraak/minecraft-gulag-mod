@@ -30,9 +30,11 @@ import java.util.Random;
 public class Gulag implements ModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger("Gulag");
-    private static final String RESPAWN_MESSAGE_TIME = "title @a times 20 200 20";
-    private static final String RESPAWN_MESSAGE_TITLE = "title @a title {\"text\":\"Gulag\",\"color\":\"dark_red\"}";
-    private static final String RESPAWN_MESSAGE_SUBTITLE = "title @a subtitle {\"text\":\"Defeat the ender dragon!\"}";
+    private static final String RESPAWN_MESSAGE_TIME = "title [TARGET] times 20 200 20";
+    private static final String RESPAWN_MESSAGE_TITLE =
+            "title [TARGET] title {\"text\":\"Gulag\",\"color\":\"dark_red\"}";
+    private static final String RESPAWN_MESSAGE_SUBTITLE =
+            "title [TARGET] subtitle {\"text\":\"Defeat the ender dragon!\"}";
     private static final String RESPAWN_MESSAGE_CHAT =
             "Welcome to the Gulag! Fight your way back to your home world by defeating the ender dragon.";
 
@@ -64,9 +66,10 @@ public class Gulag implements ModInitializer {
     }
 
     public static void sendInfoMessage(ServerPlayerEntity player) {
-        executeCommand(RESPAWN_MESSAGE_TIME);
-        executeCommand(RESPAWN_MESSAGE_TITLE);
-        executeCommand(RESPAWN_MESSAGE_SUBTITLE);
+        String playerName = player.getName().getString();
+        executeCommand(RESPAWN_MESSAGE_TIME.replace("[TARGET]", playerName));
+        executeCommand(RESPAWN_MESSAGE_TITLE.replace("[TARGET]", playerName));
+        executeCommand(RESPAWN_MESSAGE_SUBTITLE.replace("[TARGET]", playerName));
         player.sendMessage(Text.of(RESPAWN_MESSAGE_CHAT));
     }
 
@@ -113,11 +116,9 @@ public class Gulag implements ModInitializer {
             if (!Gulag.isLoaded) {
                 loadGulag(getRandomSeed());
             }
-
-            if(!isGulagWorld(newPlayer.getSpawnPointDimension())) {
+            if (!isGulagWorld(newPlayer.getSpawnPointDimension())) {
                 putInGulag(newPlayer);
-//              sendInfoMessage(newPlayer);
-
+                sendInfoMessage(newPlayer);
             }
         }
     }
@@ -177,7 +178,6 @@ public class Gulag implements ModInitializer {
         return world == Gulag.end.getRegistryKey();
     }
 
-
     public static boolean isGulagOverworld(World world) {
         return isGulagOverworld(world.getRegistryKey());
     }
@@ -190,7 +190,6 @@ public class Gulag implements ModInitializer {
         return isGulagEnd(world.getRegistryKey());
     }
 
-
     public static boolean isGulagOverworldOrNether(RegistryKey<World> world) {
         return isGulagOverworld(world) || isGulagNether(world);
     }
@@ -198,7 +197,6 @@ public class Gulag implements ModInitializer {
     public static boolean isGulagOverworldOrNether(World world) {
         return isGulagOverworldOrNether(world.getRegistryKey());
     }
-
 
     public static boolean isGulagWorld(RegistryKey<World> world) {
         return isGulagOverworld(world)
