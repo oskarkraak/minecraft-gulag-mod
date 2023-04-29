@@ -25,7 +25,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "xyz.nucleoid:fantasy:0.4.9+1.19.4-rc2"
+    modImplementation "xyz.nucleoid:fantasy:0.4.10+1.19.4"
 }
 
 loom {
