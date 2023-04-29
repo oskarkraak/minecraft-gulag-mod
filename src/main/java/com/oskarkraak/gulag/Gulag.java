@@ -63,7 +63,7 @@ public class Gulag implements ModInitializer {
         player.setSpawnPoint(overworld.getRegistryKey(), spawnPos, 0.0f, true, false);
     }
 
-    private static void sendInfoMessage(ServerPlayerEntity player) {
+    public static void sendInfoMessage(ServerPlayerEntity player) {
         executeCommand(RESPAWN_MESSAGE_TIME);
         executeCommand(RESPAWN_MESSAGE_TITLE);
         executeCommand(RESPAWN_MESSAGE_SUBTITLE);
