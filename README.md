@@ -3,13 +3,15 @@
 This is a Minecraft server-side mod that spawns players in a new world each time they die.
 They can get back to their home world by defeating the Ender Dragon in the new world.
 
-## Why?
+## Mod Description
+
+### Why?
 
 This mod aims to mimic the feel of Minecraft's Hardcore difficulty without the risk of permanently losing the world.
 Instead, the players get punished by having to defeat the ender dragon in a new world. This will improve their skill
 level and speedrun abilities.
 
-## The Name
+### The Name
 
 The mod is named after the "gulag" from Call of Duty, where players get a second chance if they defeat an opponent in
 duel.
@@ -18,7 +20,7 @@ deleting the world.
 The only difference is that they will simply respawn in their new "gulag" world if they die there, instead of being sent
 to yet another gulag.
 
-## How does it work?
+### How does it work?
 
 When a player dies, the gulag will be created with a random seed.
 The player's inventory will be deleted, and they will be spawned into the gulag.
