@@ -15,7 +15,8 @@ The mod is named after the "gulag" from Call of Duty, where players get a second
 duel.
 In a similar fashion, this mod gives the player a second chance by letting them duel the Ender Dragon instead of
 deleting the world.
-The only difference is that they will simply respawn in their new world if they die there.
+The only difference is that they will simply respawn in their new "gulag" world if they die there, instead of being sent
+to yet another gulag.
 
 ## How does it work?
 
@@ -35,7 +36,7 @@ Now, if a player dies, a new gulag will be created with a new random seed.
 
 ## Install
 
-This is a fabric mod.
+This mod works with the Fabric mod loader.
 Since it only accesses server resources, it can be installed in the client for single-player or on a server for
 multiplayer. If installed on a server, the players **don't** need to install anything.
 
@@ -47,7 +48,8 @@ multiplayer. If installed on a server, the players **don't** need to install any
    Ideally you choose a Minecraft version for which the latest version of the gulag mod is available.
 1. Download and start the [Fabric installer](https://fabricmc.net/use/installer/).
 1. Choose your Minecraft version and press "Install".
-1. Download the correct version of each of the following into the `mods` folder of your Minecraft installation:
-   1. [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-   1. [Fantasy library](https://github.com/NucleoidMC/fantasy/releases)
-   1. [Gulag mod](https://github.com/oskarkraak/minecraft-gulag-mod/releases)
+1. Download the correct version (matching your Minecraft version) of each of the following into the `mods` folder of
+   your Minecraft installation:
+    1. [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+    1. [Fantasy library](https://github.com/NucleoidMC/fantasy/releases)
+    1. [Gulag mod](https://github.com/oskarkraak/minecraft-gulag-mod/releases)
