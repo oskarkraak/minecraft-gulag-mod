@@ -41,7 +41,9 @@ multiplayer. If installed on a server, the players **don't** need to install any
 
 1. Choose a Minecraft version you want to play.
    Note that the gulag mod is not available for all versions of Minecraft.
-   You can find all gulag mod versions [here](https://github.com/oskarkraak/minecraft-gulag-mod/releases).
+   You can find all gulag mod versions [here](https://github.com/oskarkraak/minecraft-gulag-mod/releases): The first
+   version number denotes the gulag mod version, the second the Minecraft version (i.e. v1.0.0+1.19.4 is version 1.0.0
+   of the gulag mod for Minecraft version 1.19.4).
    Ideally you choose a Minecraft version for which the latest version of the gulag mod is available.
 1. Download and start the [Fabric installer](https://fabricmc.net/use/installer/).
 1. Choose your Minecraft version and press "Install".
